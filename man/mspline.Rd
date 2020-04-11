@@ -25,9 +25,11 @@ Monotone spline fitting
 }
 \details{
 Monotone spline fitting function using MGCV. Also has a predict method
-based on mgcv::Predict.matrix.
+based on mgcv::Predict.matrix. However, it doesn't really play
+according to the rules of the generic.
 }
 \examples{
+# Generate data from a monotonic truth.
 x <- runif(100) * 4 - 1
 x <- sort(x)
 f <- exp(4 * x) / (1 + exp(4 * x))
@@ -37,10 +39,12 @@ fv <- mspline(x, y, 5)
 lines(x, predict(fv, x), col = "red")
 fv <- mspline(x, y, 10)
 lines(x, predict(fv, x), col = "blue")
-legend("bottomright", lty = 1, paste0("k=", c(5, 10)), col = c("red", "blue"))
+legend("bottomright", lty = 1, paste0("k=", c(5, 10)),
+       col = c("red", "blue"))
 }
 \references{
-See \url{https://gist.github.com/willtownes/f598e5c2344043675566603d29b6c2d6}
+See
+\url{https://gist.github.com/willtownes/f598e5c2344043675566603d29b6c2d6}
 }
 \author{
 will townes and gzt
