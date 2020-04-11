@@ -36,27 +36,27 @@ mspline <- function(x, y, k = 10, lower = NA, upper = NA) {
   # use unconstrained gam to get rough parameter estimates
   # lower, upper optional bounds on the function
   # slight modification of an example in the mgcv::pcls documentation
-    dat <- data.frame(x = x, y = y)
-    init_gam <- mgcv::gam(y ~ s(x, k = k, bs = "cr"))
+  dat <- data.frame(x = x, y = y)
+  init_gam <- mgcv::gam(y ~ s(x, k = k, bs = "cr"))
   # Create Design matrix, constraints etc. for monotonic spline....
-    sm <- mgcv::smoothCon(s(x, k = k, bs = "cr"), dat, knots = NULL)[[1]]
-    # monotonicity constraints
-    mc <- mgcv::mono.con(sm$xp, lower = lower, upper = upper) 
-    mlist <- list(
-        X = sm$X, y = y, # design matrix, outcome
-        C = matrix(0, 0, 0), # equality constraints (none)
-        Ain = mc$A, bin = mc$b, # inequality constraints
-        sp = init_gam$sp, p = sm$xp, # initial guesses for param estimates
-        S = sm$S, # smoothness penalty matrix
-        w = y * 0 + 1, off = 0 # weights, offset
-    )
+  sm <- mgcv::smoothCon(s(x, k = k, bs = "cr"), dat, knots = NULL)[[1]]
+  # monotonicity constraints
+  mc <- mgcv::mono.con(sm$xp, lower = lower, upper = upper)
+  mlist <- list(
+    X = sm$X, y = y, # design matrix, outcome
+    C = matrix(0, 0, 0), # equality constraints (none)
+    Ain = mc$A, bin = mc$b, # inequality constraints
+    sp = init_gam$sp, p = sm$xp, # initial guesses for param estimates
+    S = sm$S, # smoothness penalty matrix
+    w = y * 0 + 1, off = 0 # weights, offset
+  )
   # fit spine using penalized constrained least squares
-    p <- mgcv::pcls(mlist)
-    cl <- match.call()
-    cl[[1L]] <- as.name("mspline")
-    retlist <- list(sm = sm, p = p, call = cl)
-    class(retlist) <- "mspline"
-    return(retlist)
+  p <- mgcv::pcls(mlist)
+  cl <- match.call()
+  cl[[1L]] <- as.name("mspline")
+  retlist <- list(sm = sm, p = p, call = cl)
+  class(retlist) <- "mspline"
+  return(retlist)
 }
 
 #' @import mgcv
