@@ -1,8 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# monomgcv: monotonic GAMs using MGCV
-
 <!-- badges: start -->
 
 [![Codecov test
@@ -10,6 +8,8 @@ coverage](https://codecov.io/gh/gzt/monomgcv/branch/master/graph/badge.svg)](htt
 [![R build
 status](https://github.com/gzt/monomgcv/workflows/R-CMD-check/badge.svg)](https://github.com/gzt/monomgcv/actions)
 <!-- badges: end -->
+
+# monomgcv: monotonic GAMs using MGCV
 
 Turning somebody’s gist for a monotonic GAM into a package
 (experimental).
@@ -34,6 +34,8 @@ This is a basic example which shows you how to fit a monotonic GAM with
 two different settings for knots based on the existing example code in
 `mgcv`.
 
+Try the code yourself to see it plotted\!
+
 ``` r
 library(monomgcv)
 set.seed(20200410)
@@ -41,16 +43,14 @@ x <- runif(100) * 4 - 1
 x <- sort(x)
 f <- exp(4 * x) / (1 + exp(4 * x))
 y <- f + rnorm(100) * 0.1
-plot(x, y)
+# plot(x, y)
  fv <- mspline(x, y, 5)
-lines(x, predict(fv, x), col = "red")
+# lines(x, predict(fv, x), col = "red")
 fv <- mspline(x, y, 10)
-lines(x, predict(fv, x), col = "blue")
-legend("bottomright", lty = 1, paste0("k=", c(5, 10)),
-       col = c("red", "blue"))
+# lines(x, predict(fv, x), col = "blue")
+#legend("bottomright", lty = 1, paste0("k=", c(5, 10)),
+#       col = c("red", "blue"))
 ```
-
-<img src="README_files/figure-gfm/example-1.png" width="100%" />
 
 ## Code of Conduct
 
