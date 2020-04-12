@@ -20,7 +20,7 @@ Based on
 I make no representations about this package, use at your own risk.
 
 Honestly, you should use `scam` instead. It’s a nice package that’s more
-flexible and has more options.
+flexible and has more options. This is just a hack.
 
 ## Installation
 
