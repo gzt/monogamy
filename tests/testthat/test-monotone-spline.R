@@ -22,3 +22,8 @@ test_that("Residuals work", {
   resy <- residuals(fv) # x monotonic
   expect_equal(sum(resy), 0)
 })
+test_that("Class enforced", {
+    regular_gam <- gam(y~x)
+    expect_error(predict.mspline(regular_gam), "mspline")
+  }
+)
