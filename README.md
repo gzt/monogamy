@@ -19,6 +19,9 @@ Based on
 
 I make no representations about this package, use at your own risk.
 
+Honestly, you should use `scam` instead. It’s a nice package that’s more
+flexible and has more options.
+
 ## Installation
 
 And the development version from [GitHub](https://github.com/) with:
