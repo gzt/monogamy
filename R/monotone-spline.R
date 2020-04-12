@@ -78,7 +78,7 @@ predict.mspline <- function(object, newdata, ...) {
 
 #' @export
 residuals.mspline <- function(object, ...) {
-    pred <- predict.mspline(object)
-    y <- object$y
-    return(y - pred)
+  pred <- predict.mspline(object)
+  y <- object$y
+  return(y - pred)
 }
