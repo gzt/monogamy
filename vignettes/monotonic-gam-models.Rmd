@@ -1,5 +1,5 @@
 ---
-title: "Fitting monotone GAM models with monogamy"
+title: "Fitting monotone GAM models with MGCV"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Fitting monotone GAM models}
@@ -9,7 +9,8 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
+                      collapse = TRUE,
+ #                     echo = FALSE,
   comment = "#>"
 )
 ```
@@ -29,7 +30,7 @@ library(purrr)
 This example from the `mgcv` package demonstrates fitting a monotonic
 GAM model with two different settings for the `k` parameter.
 
-```{r plotfunction, fig.height = 6, fig.width = 6}
+```{r plotfunction, fig.height = 3.5, fig.width = 3.4}
 set.seed(20200410)
 x <- runif(100) * 4 - 1
 x <- sort(x)
@@ -60,7 +61,7 @@ between the variables are expected to be monotonic but may not be.
 
 ## Application to Image Comparison Data
 
-```{r readincatsim}
+```{r readincatsim, fig.caption = "First entries in image data table"}
 data(imagemetrics)
 knitr::kable(head(imagemetrics), digits = 3)
 ```
@@ -120,7 +121,7 @@ but it has a problem: the fit really ought to be monotonic, though it's
 interesting if it isn't. We should have some sense of how well a monotonic
 fit works for this data and then can judge which metric best explains the
 variation in MOS. We can get a sense of how well each method relates
-to the MOS rating by looking at their correlatiosn:
+to the MOS rating by looking at their correlations:
 
 ```{r correlation}
 groupcorr <- imagemetrics %>% group_by(metric) %>%
@@ -165,6 +166,7 @@ varMOS <- var(imagemetrics$mean[imagemetrics$metric == "msssim"])
 imagemetrics %>% group_by(metric) %>% nest() %>%
     mutate(msplinemodel = map(data, fit_mspline),
            residuals = map(msplinemodel, residuals),
+           varMOS = map_dbl(data, ~ var(.x$mean)),
            msplineVAR = map_dbl(residuals, var),
            msplineDevExp = 1 - msplineVAR/varMOS,
            mgcvmodel = map(data, possibly(fit_mgcv, otherwise = NA)),
@@ -183,7 +185,8 @@ indicates there is some region where the image quality metric fails to be
 monotonic in its relation to the MOS. 
 
 One can ask about fitting the reverse, explaining the metric by the MOS, and that
-table can be seen here:
+table can be seen here, though these results cannot be directly compared across the 
+metrics because the response variable is not the same:
 
 ```{r reverse, echo = FALSE}
 fit_revmspline <- function(df, k = 10, lower = NA, upper = NA) {
@@ -197,9 +200,6 @@ fit_revmgcv <- function(df, k = 10, ...) {
      pass_df <- data.frame(x = x, y = y)
     mgcv::gam(y ~ 1+ s(x, k = k, bs = "cr"), data = pass_df,...)
 }
-
-
-
 
 imagemetrics %>% group_by(metric) %>% nest() %>%
     mutate(msplinemodel = map(data, fit_revmspline),
@@ -269,6 +269,9 @@ to check out, as expected.
 
 ```{r unrestrictedGAMplot, fig.width = 6, fig.height = 6}
 
-for (i in 1:8) 
+for (i in 1:8) {
+    cat( metricmodels$label[i])
     mgcv::gam.check(metricmodels$mgcvmodel[[i]])
+    cat("\n\n\n\n\n")
+}
 ```
