@@ -4,12 +4,12 @@
 <!-- badges: start -->
 
 [![Codecov test
-coverage](https://codecov.io/gh/gzt/monomgcv/branch/master/graph/badge.svg)](https://codecov.io/gh/gzt/monomgcv?branch=master)
+coverage](https://codecov.io/gh/gzt/monogamy/branch/master/graph/badge.svg)](https://codecov.io/gh/gzt/monogamy?branch=master)
 [![R build
-status](https://github.com/gzt/monomgcv/workflows/R-CMD-check/badge.svg)](https://github.com/gzt/monomgcv/actions)
+status](https://github.com/gzt/monogamy/workflows/R-CMD-check/badge.svg)](https://github.com/gzt/monogamy/actions)
 <!-- badges: end -->
 
-# monomgcv: monotonic GAMs using MGCV
+# monogamy: monotonic GAMs using MGCV
 
 Turning somebody’s gist for a monotonic GAM into a package
 (experimental).
@@ -25,7 +25,7 @@ And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("gzt/monomgcv")
+devtools::install_github("gzt/monogamy")
 ```
 
 ## Example
@@ -37,7 +37,7 @@ two different settings for knots based on the existing example code in
 Try the code yourself to see it plotted\!
 
 ``` r
-library(monomgcv)
+library(monogamy)
 set.seed(20200410)
 x <- runif(100) * 4 - 1
 x <- sort(x)
@@ -54,7 +54,7 @@ fv <- mspline(x, y, 10)
 
 ## Code of Conduct
 
-Please note that the monomgcv project is released with a [Contributor
+Please note that the monogamy project is released with a [Contributor
 Code of
 Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.

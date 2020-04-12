@@ -1,4 +1,4 @@
 library(testthat)
-library(monomgcv)
+library(monogamy)
 
-test_check("monomgcv")
+test_check("monogamy")

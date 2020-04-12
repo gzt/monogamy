@@ -1,4 +1,4 @@
-Package: monomgcv
+Package: monogamy
 Title: Monotone Spline Fitting with MGCV
 Version: 0.0.1
 Authors@R: 
@@ -20,5 +20,5 @@ Suggests:
     testthat,
     covr,
     styler
-URL: https://gzt.github.io/monomgcv https://github.com/gzt/monomgcv
-BugReports: https://github.com/gzt/monomgcv/issues
+URL: https://gzt.github.io/monogamy https://github.com/gzt/monogamy
+BugReports: https://github.com/gzt/monogamy/issues
