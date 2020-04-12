@@ -404,6 +404,56 @@
 </tbody>
 </table>
 <p>For most of the models, there is not much difference between the fit of the monotonic GAM and the unconstrained GAM. A discrepancy between the two indicates there is some region where the image quality metric fails to be monotonic in its relation to the MOS.</p>
+<p>One can ask about fitting the reverse, explaining the metric by the MOS, and that table can be seen here:</p>
+<table class="table">
+<thead><tr class="header">
+<th align="left">Metric</th>
+<th align="right">GAM % Deviance</th>
+<th align="right">mono-GAM % Deviance</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">CatSIM (Cohen)</td>
+<td align="right">0.434</td>
+<td align="right">0.392</td>
+</tr>
+<tr class="even">
+<td align="left">CatSIM (AdjRand)</td>
+<td align="right">0.429</td>
+<td align="right">0.389</td>
+</tr>
+<tr class="odd">
+<td align="left">Adjusted Rand</td>
+<td align="right">0.398</td>
+<td align="right">0.355</td>
+</tr>
+<tr class="even">
+<td align="left">Cohen’s kappa</td>
+<td align="right">0.401</td>
+<td align="right">0.374</td>
+</tr>
+<tr class="odd">
+<td align="left">MS-SSIM</td>
+<td align="right">0.439</td>
+<td align="right">0.401</td>
+</tr>
+<tr class="even">
+<td align="left">CatSIM (Accuracy)</td>
+<td align="right">0.424</td>
+<td align="right">0.401</td>
+</tr>
+<tr class="odd">
+<td align="left">Accuracy</td>
+<td align="right">0.363</td>
+<td align="right">0.295</td>
+</tr>
+<tr class="even">
+<td align="left">CW-SSIM</td>
+<td align="right">0.336</td>
+<td align="right">0.298</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="plotting-the-monotonic-gam" class="section level2">
 <h2 class="hasAnchor">
@@ -422,10 +472,18 @@
            <span class="kw">col</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"red"</span>, <span class="st">"blue"</span>))
 }</pre></body></html></div>
 <p><img src="monotonic-gam-models_files/figure-html/monogamyplots-1.png" width="768"><img src="monotonic-gam-models_files/figure-html/monogamyplots-2.png" width="768"><img src="monotonic-gam-models_files/figure-html/monogamyplots-3.png" width="768"><img src="monotonic-gam-models_files/figure-html/monogamyplots-4.png" width="768"></p>
+<p>For several of these, there is no difference between the constrained and unconstrained models since they were already monotonic.</p>
+<div id="plots-with-mos-as-the-x-axis" class="section level3">
+<h3 class="hasAnchor">
+<a href="#plots-with-mos-as-the-x-axis" class="anchor"></a>Plots with MOS as the x-axis</h3>
+<p>We can also investigate if we modeled it the other direction.</p>
+<p><img src="monotonic-gam-models_files/figure-html/revplost-1.png" width="768"><img src="monotonic-gam-models_files/figure-html/revplost-2.png" width="768"><img src="monotonic-gam-models_files/figure-html/revplost-3.png" width="768"><img src="monotonic-gam-models_files/figure-html/revplost-4.png" width="768"></p>
+</div>
 </div>
 <div id="unconstrained-gam-diagnostics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#unconstrained-gam-diagnostics" class="anchor"></a>Unconstrained GAM diagnostics</h2>
+<p>These diagnostics can be inspected for completeness, but they all seem to check out, as expected.</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r">
 <span class="kw">for</span> (<span class="no">i</span> <span class="kw">in</span> <span class="fl">1</span>:<span class="fl">8</span>)
     <span class="kw pkg">mgcv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.check.html">gam.check</a></span>(<span class="no">metricmodels</span>$<span class="no">mgcvmodel</span><span class="kw">[[</span><span class="no">i</span>]])</pre></body></html></div>
