@@ -2,7 +2,7 @@
 % Please edit documentation in R/monotone-spline.R
 \name{mspline}
 \alias{mspline}
-\title{mpline}
+\title{mspline}
 \usage{
 mspline(x, y, k = 10, lower = NA, upper = NA)
 }

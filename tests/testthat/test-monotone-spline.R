@@ -23,7 +23,12 @@ test_that("Residuals work", {
   expect_equal(sum(resy), 0)
 })
 test_that("Class enforced", {
-    regular_gam <- gam(y~x)
+      set.seed(20200411)
+  x <- runif(100) * 4 - 1
+  x <- sort(x)
+  f <- exp(4 * x) / (1 + exp(4 * x))
+  y <- f + rnorm(100) * 0.1
+    regular_gam <- mgcv::gam(y~x)
     expect_error(predict.mspline(regular_gam), "mspline")
   }
 )
