@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fitting monotone GAM models with monogamy • monogamy</title>
+<title>Fitting monotone GAM models with MGCV • monogamy</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Fitting monotone GAM models with monogamy">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Fitting monotone GAM models with MGCV">
 <meta property="og:description" content="monogamy">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/monotonic-gam-models.html">Fitting monotone GAM models with monogamy</a>
+      <a href="../articles/monotonic-gam-models.html">Fitting monotone GAM models with MGCV</a>
     </li>
   </ul>
 </li>
@@ -79,7 +79,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Fitting monotone GAM models with monogamy</h1>
+      <h1 data-toc-skip>Fitting monotone GAM models with MGCV</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/gzt/monogamy/blob/master/vignettes/monotonic-gam-models.Rmd"><code>vignettes/monotonic-gam-models.Rmd</code></a></small>
@@ -130,7 +130,7 @@
  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="no">x</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fv</span>, <span class="no">x</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="st">"#386cb0"</span>)
 <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span>(<span class="st">"bottomright"</span>, <span class="kw">lty</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"k="</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">10</span>)),
        <span class="kw">col</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#7fc97f"</span>, <span class="st">"#386cb0"</span>))</pre></body></html></div>
-<p><img src="monotonic-gam-models_files/figure-html/plotfunction-1.png" width="576"></p>
+<p><img src="monotonic-gam-models_files/figure-html/plotfunction-1.png" width="326.4"></p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r">
 <span class="no">residfv_10</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span>(<span class="no">fv</span>)
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">x</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">residfv_5</span>, <span class="kw">main</span> <span class="kw">=</span> <span class="st">"Residuals vs x plot"</span>,
@@ -138,7 +138,7 @@
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">x</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">residfv_10</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">"#386cb0"</span>, <span class="kw">pch</span> <span class="kw">=</span> <span class="fl">16</span>)
 <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span>(<span class="st">"bottomright"</span>, <span class="kw">pch</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">16</span>), <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"k="</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">10</span>)),
        <span class="kw">col</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#7fc97f"</span>, <span class="st">"#386cb0"</span>))</pre></body></html></div>
-<p><img src="monotonic-gam-models_files/figure-html/plotfunction-2.png" width="576"></p>
+<p><img src="monotonic-gam-models_files/figure-html/plotfunction-2.png" width="326.4"></p>
 <p>This is an artificial data set, though, and the ground truth is that the curve is monotonic. Here we present some real data where the relationships between the variables are expected to be monotonic but may not be.</p>
 </div>
 <div id="application-to-image-comparison-data" class="section level2">
@@ -252,7 +252,7 @@
 <span class="co">#&gt; `geom_smooth()` using formula 'y ~ s(x, bs = "cs")'</span>
 <span class="co">#&gt; `geom_smooth()` using formula 'y ~ x'</span></pre></body></html></div>
 <p><img src="monotonic-gam-models_files/figure-html/plotmetrics-1.png" width="576"></p>
-<p>There is a GAM model on the plot and it’s fitted by generalized cross validation, but it has a problem: the fit really ought to be monotonic, though it’s interesting if it isn’t. We should have some sense of how well a monotonic fit works for this data and then can judge which metric best explains the variation in MOS. We can get a sense of how well each method relates to the MOS rating by looking at their correlatiosn:</p>
+<p>There is a GAM model on the plot and it’s fitted by generalized cross validation, but it has a problem: the fit really ought to be monotonic, though it’s interesting if it isn’t. We should have some sense of how well a monotonic fit works for this data and then can judge which metric best explains the variation in MOS. We can get a sense of how well each method relates to the MOS rating by looking at their correlations:</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">groupcorr</span> <span class="kw">&lt;-</span> <span class="no">imagemetrics</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">metric</span>) <span class="kw">%&gt;%</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">Spearman</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="no">mean</span>,<span class="no">score</span>, <span class="kw">method</span><span class="kw">=</span><span class="st">"spearman"</span>, <span class="kw">use</span> <span class="kw">=</span> <span class="st">"complete.obs"</span>),
               <span class="kw">Kendall</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="no">mean</span>, <span class="no">score</span>, <span class="kw">method</span><span class="kw">=</span><span class="st">"kendall"</span>, <span class="kw">use</span> <span class="kw">=</span> <span class="st">"complete.obs"</span>),
@@ -344,6 +344,7 @@
 <span class="no">imagemetrics</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">metric</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">nest</a></span>() <span class="kw">%&gt;%</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">msplinemodel</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">data</span>, <span class="no">fit_mspline</span>),
            <span class="kw">residuals</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">msplinemodel</span>, <span class="no">residuals</span>),
+           <span class="kw">varMOS</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span>(<span class="no">data</span>, ~ <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span>(<span class="no">.x</span>$<span class="no">mean</span>)),
            <span class="kw">msplineVAR</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span>(<span class="no">residuals</span>, <span class="no">var</span>),
            <span class="kw">msplineDevExp</span> <span class="kw">=</span> <span class="fl">1</span> - <span class="no">msplineVAR</span>/<span class="no">varMOS</span>,
            <span class="kw">mgcvmodel</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">data</span>, <span class="fu"><a href="https://purrr.tidyverse.org/reference/safely.html">possibly</a></span>(<span class="no">fit_mgcv</span>, <span class="kw">otherwise</span> <span class="kw">=</span> <span class="fl">NA</span>)),
@@ -404,7 +405,7 @@
 </tbody>
 </table>
 <p>For most of the models, there is not much difference between the fit of the monotonic GAM and the unconstrained GAM. A discrepancy between the two indicates there is some region where the image quality metric fails to be monotonic in its relation to the MOS.</p>
-<p>One can ask about fitting the reverse, explaining the metric by the MOS, and that table can be seen here:</p>
+<p>One can ask about fitting the reverse, explaining the metric by the MOS, and that table can be seen here, though these results cannot be directly compared across the metrics because the response variable is not the same:</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Metric</th>
@@ -485,8 +486,12 @@
 <a href="#unconstrained-gam-diagnostics" class="anchor"></a>Unconstrained GAM diagnostics</h2>
 <p>These diagnostics can be inspected for completeness, but they all seem to check out, as expected.</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r">
-<span class="kw">for</span> (<span class="no">i</span> <span class="kw">in</span> <span class="fl">1</span>:<span class="fl">8</span>)
-    <span class="kw pkg">mgcv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.check.html">gam.check</a></span>(<span class="no">metricmodels</span>$<span class="no">mgcvmodel</span><span class="kw">[[</span><span class="no">i</span>]])</pre></body></html></div>
+<span class="kw">for</span> (<span class="no">i</span> <span class="kw">in</span> <span class="fl">1</span>:<span class="fl">8</span>) {
+    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>( <span class="no">metricmodels</span>$<span class="no">label</span>[<span class="no">i</span>])
+    <span class="kw pkg">mgcv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.check.html">gam.check</a></span>(<span class="no">metricmodels</span>$<span class="no">mgcvmodel</span><span class="kw">[[</span><span class="no">i</span>]])
+    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"\n\n\n\n\n"</span>)
+}
+<span class="co">#&gt; CatSIM (Cohen)</span></pre></body></html></div>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-1.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
@@ -501,7 +506,13 @@
 #&gt;        k'  edf k-index p-value  
 #&gt; s(x) 9.00 1.75     0.9    0.07 .
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; CatSIM (AdjRand)</code></pre>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-2.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
@@ -514,7 +525,13 @@
 #&gt; indicate that k is too low, especially if edf is close to k'.
 #&gt; 
 #&gt;        k'  edf k-index p-value
-#&gt; s(x) 9.00 2.88    0.97    0.28</code></pre>
+#&gt; s(x) 9.00 2.88    0.97    0.28
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; Adjusted Rand</code></pre>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-3.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
@@ -527,7 +544,13 @@
 #&gt; indicate that k is too low, especially if edf is close to k'.
 #&gt; 
 #&gt;        k'  edf k-index p-value
-#&gt; s(x) 9.00 8.46    1.02    0.62</code></pre>
+#&gt; s(x) 9.00 8.46    1.02    0.62
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; Cohen's kappa</code></pre>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-4.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
@@ -542,7 +565,13 @@
 #&gt;       k' edf k-index p-value  
 #&gt; s(x) 9.0 6.3    0.89   0.075 .
 #&gt; ---
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; MS-SSIM</code></pre>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-5.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
@@ -555,7 +584,13 @@
 #&gt; indicate that k is too low, especially if edf is close to k'.
 #&gt; 
 #&gt;        k'  edf k-index p-value
-#&gt; s(x) 9.00 6.53    1.04    0.63</code></pre>
+#&gt; s(x) 9.00 6.53    1.04    0.63
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; CatSIM (Accuracy)</code></pre>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-6.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
@@ -568,7 +603,13 @@
 #&gt; indicate that k is too low, especially if edf is close to k'.
 #&gt; 
 #&gt;        k'  edf k-index p-value
-#&gt; s(x) 9.00 5.05    0.96    0.33</code></pre>
+#&gt; s(x) 9.00 5.05    0.96    0.33
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; Accuracy</code></pre>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-7.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
@@ -581,7 +622,13 @@
 #&gt; indicate that k is too low, especially if edf is close to k'.
 #&gt; 
 #&gt;        k'  edf k-index p-value
-#&gt; s(x) 9.00 6.65    0.97    0.29</code></pre>
+#&gt; s(x) 9.00 6.65    0.97    0.29
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; CW-SSIM</code></pre>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-8.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
