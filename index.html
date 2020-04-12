@@ -67,11 +67,11 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
+
 <div id="monomgcv-monotonic-gams-using-mgcv" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#monomgcv-monotonic-gams-using-mgcv" class="anchor"></a>monomgcv: monotonic GAMs using MGCV</h1></div>
-<!-- badges: start -->
-
 <p>Turning somebody’s gist for a monotonic GAM into a package (experimental).</p>
 <p>Based on <a href="https://gist.github.com/willtownes/f598e5c2344043675566603d29b6c2d6" class="uri">https://gist.github.com/willtownes/f598e5c2344043675566603d29b6c2d6</a></p>
 <p>I make no representations about this package, use at your own risk.</p>
@@ -86,20 +86,20 @@
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
 <p>This is a basic example which shows you how to fit a monotonic GAM with two different settings for knots based on the existing example code in <code>mgcv</code>.</p>
+<p>Try the code yourself to see it plotted!</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">monomgcv</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">20200410</span>)
 <span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="fl">100</span>) * <span class="fl">4</span> - <span class="fl">1</span>
 <span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span>(<span class="no">x</span>)
 <span class="no">f</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(<span class="fl">4</span> * <span class="no">x</span>) / (<span class="fl">1</span> + <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(<span class="fl">4</span> * <span class="no">x</span>))
 <span class="no">y</span> <span class="kw">&lt;-</span> <span class="no">f</span> + <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="fl">100</span>) * <span class="fl">0.1</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="no">y</span>)
+<span class="co"># plot(x, y)</span>
  <span class="no">fv</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/mspline.html">mspline</a></span>(<span class="no">x</span>, <span class="no">y</span>, <span class="fl">5</span>)
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="no">x</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fv</span>, <span class="no">x</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="st">"red"</span>)
+<span class="co"># lines(x, predict(fv, x), col = "red")</span>
 <span class="no">fv</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/mspline.html">mspline</a></span>(<span class="no">x</span>, <span class="no">y</span>, <span class="fl">10</span>)
-<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="no">x</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fv</span>, <span class="no">x</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="st">"blue"</span>)
-<span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span>(<span class="st">"bottomright"</span>, <span class="kw">lty</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"k="</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">10</span>)),
-       <span class="kw">col</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"red"</span>, <span class="st">"blue"</span>))</pre></div>
-<p><img src="README_files/figure-gfm/example-1.png" width="100%"></p>
+<span class="co"># lines(x, predict(fv, x), col = "blue")</span>
+<span class="co">#legend("bottomright", lty = 1, paste0("k=", c(5, 10)),</span>
+<span class="co">#       col = c("red", "blue"))</span></pre></div>
 </div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
@@ -107,6 +107,7 @@
 <p>Please note that the monomgcv project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
