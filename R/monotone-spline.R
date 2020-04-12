@@ -3,7 +3,7 @@
 ##' Monotone spline fitting function using MGCV. Also has a predict method
 ##' based on mgcv::Predict.matrix. However, it doesn't really play
 ##' according to the rules of the generic.
-##' @title mpline
+##' @title mspline
 ##' @param x predictors
 ##' @param y values
 ##' @param k max number of knots (default 10)
