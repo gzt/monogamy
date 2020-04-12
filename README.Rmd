@@ -1,4 +1,5 @@
 ---
+title: monomgcv: Monotone Spline Fitting with MGCV
 output: github_document
 ---
 
