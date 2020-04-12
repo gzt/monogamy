@@ -1,5 +1,5 @@
 Package: monomgcv
-Title: Monotone spline fitting with MGCV
+Title: Monotone Spline Fitting with MGCV
 Version: 0.0.1
 Authors@R: 
     person(given = "Geoffrey",
@@ -19,3 +19,5 @@ RoxygenNote: 7.1.0
 Suggests: 
     testthat,
     covr
+URL: https://gzt.github.io/monomgcv https://github.com/gzt/monomgcv
+BugReports: https://github.com/gzt/monomgcv/issues

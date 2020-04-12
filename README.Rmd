@@ -13,7 +13,6 @@ knitr::opts_chunk$set(
   tidy = "styler"
 )
 ```
-
 # monomgcv: monotonic GAMs using MGCV
 
 <!-- badges: start -->
