@@ -1,5 +1,4 @@
 ---
-title: monomgcv: Monotone Spline Fitting with MGCV
 output: github_document
 ---
 
@@ -9,16 +8,16 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  out.width = "100%",
-  tidy = "styler"
+  out.width = "100%"
 )
 ```
-# monomgcv: monotonic GAMs using MGCV
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/gzt/monomgcv/branch/master/graph/badge.svg)](https://codecov.io/gh/gzt/monomgcv?branch=master)
 [![R build status](https://github.com/gzt/monomgcv/workflows/R-CMD-check/badge.svg)](https://github.com/gzt/monomgcv/actions)
 <!-- badges: end -->
+
+# monomgcv: monotonic GAMs using MGCV
 
 Turning somebody's gist for a monotonic GAM into a package (experimental).
 
