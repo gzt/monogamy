@@ -21,13 +21,6 @@ I make no representations about this package, use at your own risk.
 
 ## Installation
 
-You can install the released version of monomgcv from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("monomgcv")
-```
-
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
