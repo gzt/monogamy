@@ -149,6 +149,6 @@ scatter_fun = function(x, y) {
 par(mfrow = c(1,2))
 for (i in 1:8) {
     plot(metricmodels$msplinemodel[[i]], xlab = metricmodels$metric[i],
-         ylab = "MOS")
+         ylab = "MOS", pch = 16)
 }
 ```
