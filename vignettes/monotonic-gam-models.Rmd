@@ -179,7 +179,8 @@ knitr::kable(x = metricmodels %>% ungroup() %>% select(label, mgcvDevExp, msplin
 
 For most of the models, there is not much difference between the fit of the 
 monotonic GAM and the unconstrained GAM. A discrepancy between the two 
-indicates there is some region where the image quality metric 
+indicates there is some region where the image quality metric fails to be 
+monotonic in its relation to the MOS. 
 
 ## Plotting the monotonic GAM
 
