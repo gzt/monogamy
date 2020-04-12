@@ -50,10 +50,11 @@ legend("bottomright", lty = 1, paste0("k=", c(5, 10)),
        col = c("red", "blue"))
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="README_files/figure-gfm/example-1.png" width="100%" />
 
 ## Code of Conduct
 
 Please note that the monomgcv project is released with a [Contributor
-Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
+Code of
+Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
