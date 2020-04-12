@@ -102,10 +102,10 @@ residuals.mspline <- function(object, ...) {
 
 #' @export
 plot.mspline <- function(x, ...) {
-   rearrange <- rank(x$x, ties.method = "first")
-   graphics::plot(x = x$x, y = x$y, ...)
+   rearrange <- order(x$x)
    predictions <- c(predict.mspline(x))
-  graphics::lines(
+   graphics::plot(x = x$x, y = x$y, ...)
+   graphics::lines(
                 x = x$x[rearrange], y = predictions[rearrange],
                 col = "red", ...)
 }
