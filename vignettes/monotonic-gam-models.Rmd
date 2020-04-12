@@ -182,6 +182,41 @@ monotonic GAM and the unconstrained GAM. A discrepancy between the two
 indicates there is some region where the image quality metric fails to be 
 monotonic in its relation to the MOS. 
 
+One can ask about fitting the reverse, explaining the metric by the MOS, and that
+table can be seen here:
+
+```{r reverse, echo = FALSE}
+fit_revmspline <- function(df, k = 10, lower = NA, upper = NA) {
+    mspline(y = df[["score"]], x = df[["mean"]],
+            k = k, lower = lower, upper = upper)
+}
+
+fit_revmgcv <- function(df, k = 10, ...) {
+     y <- df[["score"]]
+     x <- df[["mean"]]
+     pass_df <- data.frame(x = x, y = y)
+    mgcv::gam(y ~ 1+ s(x, k = k, bs = "cr"), data = pass_df,...)
+}
+
+
+
+
+imagemetrics %>% group_by(metric) %>% nest() %>%
+    mutate(msplinemodel = map(data, fit_revmspline),
+           totalvar = map_dbl(data, ~ var(.x$score)),
+           residuals = map(msplinemodel, residuals),
+           msplineVAR = map_dbl(residuals, var),
+           msplineDevExp = 1 - msplineVAR/totalvar,
+           mgcvmodel = map(data, possibly(fit_revmgcv, otherwise = NA)),
+           mgcvDevExp = 1 - map_dbl(mgcvmodel, ~.x$deviance/.x$null.deviance)) ->
+    revmetricmodels
+revmetricmodels$label <- metricnames
+
+knitr::kable(x = revmetricmodels %>% ungroup() %>% select(label, mgcvDevExp, msplineDevExp),
+             col.names = c("Metric", "GAM % Deviance", "mono-GAM % Deviance"),
+             digits = 3)
+```
+
 ## Plotting the monotonic GAM
 
 We can plot the monotonic GAMs and unconstrained GAMs for each metric here:
@@ -202,7 +237,35 @@ for (i in 1:8) {
 
 ```
 
+For several of these, there is no difference between the constrained
+and unconstrained models since they were already monotonic.
+
+### Plots with MOS as the x-axis
+
+We can also investigate if we modeled it the other direction.
+
+
+```{r revplost, echo = FALSE, fig.width = 8, fig.height = 5.5}
+
+par(mfrow = c(1,2))
+for (i in 1:8) {
+    plot(revmetricmodels$msplinemodel[[i]], ylab = revmetricmodels$label[i],
+         xlab = "MOS", pch = 16, xlim = c(0,100), ylim = c(0,1))
+    mgcvx <- revmetricmodels$mgcvmodel[[i]]$model$x
+    mgcvy <- revmetricmodels$mgcvmodel[[i]]$fitted.values
+    rearr <- order(mgcvx)
+    lines(mgcvx[rearr], mgcvy[rearr], col = "blue")
+    legend("bottomright", lty = 1, c("Mono", "Uncons"),
+           col = c("red", "blue"))
+}
+
+```
+
+
 ## Unconstrained GAM diagnostics
+
+These diagnostics can be inspected for completeness, but they all seem
+to check out, as expected. 
 
 ```{r unrestrictedGAMplot, fig.width = 6, fig.height = 6}
 
