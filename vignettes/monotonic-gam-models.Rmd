@@ -24,10 +24,12 @@ library(tidyr)
 library(purrr)
 ```
 
+## Basic Model Fitting
+
 This example from the `mgcv` package demonstrates fitting a monotonic
 GAM model with two different settings for the `k` parameter.
 
-```{r plotfunction}
+```{r plotfunction, fig.height = 6, fig.width = 6}
 set.seed(20200410)
 x <- runif(100) * 4 - 1
 x <- sort(x)
@@ -56,6 +58,8 @@ This is an artificial data set, though, and the ground truth is that the
 curve is monotonic. Here we present some real data where the relationships
 between the variables are expected to be monotonic but may not be.
 
+## Application to Image Comparison Data
+
 ```{r readincatsim}
 data(imagemetrics)
 knitr::kable(head(imagemetrics), digits = 3)
@@ -66,9 +70,9 @@ set of 180 distorted binary images. There are 12 "ground truth" images
 and 15 distorted versions of them. A number of people were surveyed
 for their opinion of the quality of the distorted images compared to
 the baseline on a scale from 0 - 100. The mean for each image
-is in the column 'mean' - designated the 'Mean Opinion Score' or MOS -
+is in the column `mean` - designated the 'Mean Opinion Score' or MOS -
 and the standard deviation of their rating
-is captured in the column 'std'. We then compute a set of image
+is captured in the column `std`. We then compute a set of image
 quality metrics whose scores are in 'score' and whose names are in 'metric'.
 
 ![Baseline Image #1](image-1.png "Baseline Image #1")
@@ -83,7 +87,7 @@ and the MOS and that it should be monotonic, though it may be curved and
 may have a lot of noise in it. The quality of the images is very low compared
 to what might be typical for full color or grayscale images.
 
-```{r plotmetrics}
+```{r plotmetrics, fig.height = 6, fig.width = 6}
 metric_names <- c(
   `catsim` = "CatSIM (Cohen)",
   `msssim` = "MS-SSIM",
@@ -111,12 +115,12 @@ qplot(
     NULL
 ```
 
-There is a GAM model here and it's fitted by generalized cross validation,
+There is a GAM model on the plot and it's fitted by generalized cross validation,
 but it has a problem: the fit really ought to be monotonic, though it's
 interesting if it isn't. We should have some sense of how well a monotonic
 fit works for this data and then can judge which metric best explains the
 variation in MOS. We can get a sense of how well each method relates
-to the MOS rating:
+to the MOS rating by looking at their correlatiosn:
 
 ```{r correlation}
 groupcorr <- imagemetrics %>% group_by(metric) %>%
@@ -128,27 +132,79 @@ groupcorr <- imagemetrics %>% group_by(metric) %>%
 knitr::kable(groupcorr,digits=3)
 ```
 
+A non-parametric correlation such as Spearman's, since we want a monotonic
+relationship, says more about the correspondence of the metrics to the MOS
+in the way that we are interested in. However, we are probably interested in 
+a flexible model explaining their relationship, so here we fit a monotonic
+GAM with `k = 10` and compare the deviance explained by the model to 
+an unconstrained GAM with the same parameters. 
+
 ```{r monomodels}
 fit_mspline <- function(df, k = 10, lower = NA, upper = NA) {
     mspline(x = df[["score"]], y = df[["mean"]],
             k = k, lower = lower, upper = upper)
 }
 
+fit_mgcv <- function(df, k = 10, ...) {
+     x <- df[["score"]]
+     y <- df[["mean"]]
+     pass_df <- data.frame(x = x, y = y)
+    mgcv::gam(y ~ 1+ s(x, k = k, bs = "cr"), data = pass_df,...)
+}
+
+metricnames <- c("CatSIM (Cohen)",
+                 "CatSIM (AdjRand)",
+                 "Adjusted Rand",
+                 "Cohen's kappa",
+                 "MS-SSIM",
+                 "CatSIM (Accuracy)",
+                 "Accuracy",
+                 "CW-SSIM")
+varMOS <- var(imagemetrics$mean[imagemetrics$metric == "msssim"])
 
 imagemetrics %>% group_by(metric) %>% nest() %>%
     mutate(msplinemodel = map(data, fit_mspline),
            residuals = map(msplinemodel, residuals),
-           msplineSE = map_dbl(residuals, sd)) -> metricmodels
+           msplineVAR = map_dbl(residuals, var),
+           msplineDevExp = 1 - msplineVAR/varMOS,
+           mgcvmodel = map(data, possibly(fit_mgcv, otherwise = NA)),
+           mgcvDevExp = 1 - map_dbl(mgcvmodel, ~.x$deviance/.x$null.deviance)) ->
+    metricmodels
+metricmodels$label <- metricnames
 
-scatter_fun = function(x, y) {
-     ggplot(metricmodels, aes(x = .data[[x]], y = .data[[y]]) ) +
-          geom_point() +
-         theme_bw()
-}
+knitr::kable(x = metricmodels %>% ungroup() %>% select(label, mgcvDevExp, msplineDevExp),
+             col.names = c("Metric", "GAM % Deviance", "mono-GAM % Deviance"),
+             digits = 3)
+```
+
+For most of the models, there is not much difference between the fit of the 
+monotonic GAM and the unconstrained GAM. A discrepancy between the two 
+indicates there is some region where the image quality metric 
+
+## Plotting the monotonic GAM
+
+We can plot the monotonic GAMs and unconstrained GAMs for each metric here:
+
+```{r monogamyplots, fig.width = 8, fig.height = 5.5}
 
 par(mfrow = c(1,2))
 for (i in 1:8) {
-    plot(metricmodels$msplinemodel[[i]], xlab = metricmodels$metric[i],
-         ylab = "MOS", pch = 16)
+    plot(metricmodels$msplinemodel[[i]], xlab = metricmodels$label[i],
+         ylab = "MOS", pch = 16, xlim = c(0,1), ylim = c(0,100))
+    mgcvx <- metricmodels$mgcvmodel[[i]]$model$x
+    mgcvy <- metricmodels$mgcvmodel[[i]]$fitted.values
+    rearr <- order(mgcvx)
+    lines(mgcvx[rearr], mgcvy[rearr], col = "blue")
+    legend("bottomright", lty = 1, c("Mono", "Uncons"),
+           col = c("red", "blue"))
 }
+
+```
+
+## Unconstrained GAM diagnostics
+
+```{r unrestrictedGAMplot, fig.width = 6, fig.height = 6}
+
+for (i in 1:8) 
+    mgcv::gam.check(metricmodels$mgcvmodel[[i]])
 ```

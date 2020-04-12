@@ -8,7 +8,8 @@ Authors@R:
            email = "gzthompson@gmail.com",
            comment = c(ORCID = "0000-0003-2436-8822"))
 Description: Fits a monotone spline and performs predictions
-    using MGCV.
+    using MGCV. Honestly, you should use SCAM instead, install
+    it from CRAN.
 License: GPL-3
 Imports: 
     mgcv,
