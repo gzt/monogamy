@@ -19,6 +19,13 @@ RoxygenNote: 7.1.0
 Suggests: 
     testthat,
     covr,
-    styler
+    styler,
+    knitr,
+    dplyr,
+    ggplot2,
+    rmarkdown
 URL: https://gzt.github.io/monogamy https://github.com/gzt/monogamy
 BugReports: https://github.com/gzt/monogamy/issues
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
