@@ -5,11 +5,12 @@
 ##' according to the rules of the generic.
 ##' @title mpline
 ##' @param x predictors
-##' @param y predicted values
+##' @param y values
 ##' @param k max number of knots (default 10)
 ##' @param lower optional lower bound
 ##' @param upper optional upper bound
 ##' @return list of class \code{mspline} containing the fitted elements.
+##'         Also returns \code{x} and \code{y}.
 ##' @author will townes and gzt
 ##' @export
 ##' @references
@@ -54,7 +55,7 @@ mspline <- function(x, y, k = 10, lower = NA, upper = NA) {
   p <- mgcv::pcls(mlist)
   cl <- match.call()
   cl[[1L]] <- as.name("mspline")
-  retlist <- list(sm = sm, p = p, call = cl)
+  retlist <- list(sm = sm, p = p, x = x, y = y, call = cl)
   class(retlist) <- "mspline"
   return(retlist)
 }
@@ -69,8 +70,15 @@ predict.mspline <- function(object, newdata, ...) {
   }
 
   if (missing(newdata)) {
-    newdata <- eval.parent(object$call$x)
+    newdata <- object$x
   }
   # using the monotone spline msp, predict values for the vector x
   mgcv::Predict.matrix(object$sm, data.frame(x = newdata)) %*% object$p
+}
+
+#' @export
+residuals.mspline <- function(object, ...) {
+    pred <- predict.mspline(object)
+    y <- object$y
+    return(y - pred)
 }

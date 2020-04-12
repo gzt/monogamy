@@ -9,7 +9,7 @@ mspline(x, y, k = 10, lower = NA, upper = NA)
 \arguments{
 \item{x}{predictors}
 
-\item{y}{predicted values}
+\item{y}{values}
 
 \item{k}{max number of knots (default 10)}
 
@@ -19,6 +19,7 @@ mspline(x, y, k = 10, lower = NA, upper = NA)
 }
 \value{
 list of class \code{mspline} containing the fitted elements.
+Also returns \code{x} and \code{y}.
 }
 \description{
 Monotone spline fitting
