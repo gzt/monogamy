@@ -10,7 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
                       collapse = TRUE,
- #                     echo = FALSE,
+                      echo = FALSE,
   comment = "#>"
 )
 ```
@@ -71,7 +71,7 @@ set of 180 distorted binary images. There are 12 "ground truth" images
 and 15 distorted versions of them. A number of people were surveyed
 for their opinion of the quality of the distorted images compared to
 the baseline on a scale from 0 - 100. The mean for each image
-is in the column `mean` - designated the 'Mean Opinion Score' or MOS -
+is in the column `MOS` - designated the 'Mean Opinion Score' or MOS -
 and the standard deviation of their rating
 is captured in the column `std`. We then compute a set of image
 quality metrics whose scores are in 'score' and whose names are in 'metric'.
@@ -81,7 +81,7 @@ quality metrics whose scores are in 'score' and whose names are in 'metric'.
 
 Here are two example images the respondents would have been shown:
 the baseline image on the left and the distorted image on the right.
-This image had a mean rating of 52.
+This image had a MOS rating of 52.
 
 We expect there to be a correspondence between the image quality metrics
 and the MOS and that it should be monotonic, though it may be curved and
@@ -95,12 +95,14 @@ metric_names <- c(
   `AdjRand` = "Adjusted Rand",
   `catsimrand` = "CatSIM (AdjRand)",
   `catsimacc` = "CatSIM (Accuracy)",
-  `accuracy` = "Accuracy",
+  `Accuracy` = "Accuracy",
   `cwssim` = "CW-SSIM",
-  `Cohen` = "Cohen's kappa"
+  `Cohen` = "Cohen's kappa",
+  `catsimjacc` = "CatSIM (Jaccard)",
+  `Jaccard` = "Jaccard"
 )
 qplot(
-  x = score, y = mean, color = I("#b2df8a"), alpha = I(0.8), size = I(0.75),
+  x = score, y = MOS, color = I("#b2df8a"), alpha = I(0.8), size = I(0.75),
   data = imagemetrics) +
   theme_bw() + geom_smooth(
     method = "gam", se = FALSE, color = "#1f78b4",
@@ -125,9 +127,9 @@ to the MOS rating by looking at their correlations:
 
 ```{r correlation}
 groupcorr <- imagemetrics %>% group_by(metric) %>%
-    summarize(Spearman = cor(mean,score, method="spearman", use = "complete.obs"),
-              Kendall = cor(mean, score, method="kendall", use = "complete.obs"),
-              Pearson = cor(mean, score, method="pearson", use = "complete.obs")) %>%
+    summarize(Spearman = cor(MOS,score, method="spearman", use = "complete.obs"),
+              Kendall = cor(MOS, score, method="kendall", use = "complete.obs"),
+              Pearson = cor(MOS, score, method="pearson", use = "complete.obs")) %>%
     arrange(Spearman)
 
 knitr::kable(groupcorr,digits=3)
@@ -137,45 +139,50 @@ A non-parametric correlation such as Spearman's, since we want a monotonic
 relationship, says more about the correspondence of the metrics to the MOS
 in the way that we are interested in. However, we are probably interested in 
 a flexible model explaining their relationship, so here we fit a monotonic
-GAM with `k = 10` and compare the deviance explained by the model to 
+GAM with `k = 20` and compare the deviance explained by the model to 
 an unconstrained GAM with the same parameters. 
 
 ```{r monomodels}
-fit_mspline <- function(df, k = 10, lower = NA, upper = NA) {
-    mspline(x = df[["score"]], y = df[["mean"]],
+fit_mspline <- function(df, k = 20, lower = NA, upper = NA) {
+    mspline(x = df[["score"]], y = df[["MOS"]],
             k = k, lower = lower, upper = upper)
 }
 
-fit_mgcv <- function(df, k = 10, ...) {
+fit_mgcv <- function(df, k = 20, ...) {
      x <- df[["score"]]
-     y <- df[["mean"]]
+     y <- df[["MOS"]]
      pass_df <- data.frame(x = x, y = y)
     mgcv::gam(y ~ 1+ s(x, k = k, bs = "cr"), data = pass_df,...)
 }
 
 metricnames <- c("CatSIM (Cohen)",
                  "CatSIM (AdjRand)",
+                 "CatSIM (Accuracy)",
+                 "Accuracy",
                  "Adjusted Rand",
                  "Cohen's kappa",
                  "MS-SSIM",
-                 "CatSIM (Accuracy)",
-                 "Accuracy",
-                 "CW-SSIM")
-varMOS <- var(imagemetrics$mean[imagemetrics$metric == "msssim"])
+                 "CW-SSIM",
+                 "CatSIM (Jaccard)",
+                 "Jaccard"
+)
 
 imagemetrics %>% group_by(metric) %>% nest() %>%
     mutate(msplinemodel = map(data, fit_mspline),
+           totalvar = map_dbl(data, ~ var(.x$MOS)),
            residuals = map(msplinemodel, residuals),
-           varMOS = map_dbl(data, ~ var(.x$mean)),
+           varMOS = map_dbl(data, ~ var(.x$MOS)),
            msplineVAR = map_dbl(residuals, var),
-           msplineDevExp = 1 - msplineVAR/varMOS,
+           msplineDevExp = 1 - msplineVAR/totalvar,
            mgcvmodel = map(data, possibly(fit_mgcv, otherwise = NA)),
            mgcvDevExp = 1 - map_dbl(mgcvmodel, ~.x$deviance/.x$null.deviance)) ->
     metricmodels
 metricmodels$label <- metricnames
-
-knitr::kable(x = metricmodels %>% ungroup() %>% select(label, mgcvDevExp, msplineDevExp),
-             col.names = c("Metric", "GAM % Deviance", "mono-GAM % Deviance"),
+## metricmodels$label <- metricmodels$metric
+knitr::kable(x = metricmodels %>%
+                 ungroup() %>%
+                 select(label, mgcvDevExp, msplineDevExp),
+            col.names = c( "Metric", "GAM % Deviance", "mono-GAM % Deviance"),
              digits = 3)
 ```
 
@@ -189,14 +196,14 @@ table can be seen here, though these results cannot be directly compared across 
 metrics because the response variable is not the same:
 
 ```{r reverse, echo = FALSE}
-fit_revmspline <- function(df, k = 10, lower = NA, upper = NA) {
-    mspline(y = df[["score"]], x = df[["mean"]],
+fit_revmspline <- function(df, k = 20, lower = NA, upper = NA) {
+    mspline(y = df[["score"]], x = df[["MOS"]],
             k = k, lower = lower, upper = upper)
 }
 
-fit_revmgcv <- function(df, k = 10, ...) {
+fit_revmgcv <- function(df, k = 20, ...) {
      y <- df[["score"]]
-     x <- df[["mean"]]
+     x <- df[["MOS"]]
      pass_df <- data.frame(x = x, y = y)
     mgcv::gam(y ~ 1+ s(x, k = k, bs = "cr"), data = pass_df,...)
 }
@@ -211,9 +218,11 @@ imagemetrics %>% group_by(metric) %>% nest() %>%
            mgcvDevExp = 1 - map_dbl(mgcvmodel, ~.x$deviance/.x$null.deviance)) ->
     revmetricmodels
 revmetricmodels$label <- metricnames
-
-knitr::kable(x = revmetricmodels %>% ungroup() %>% select(label, mgcvDevExp, msplineDevExp),
-             col.names = c("Metric", "GAM % Deviance", "mono-GAM % Deviance"),
+## revmetricmodels$label <- revmetricmodels$metric
+knitr::kable(x = revmetricmodels %>%
+                ungroup() %>%
+                 select(label, mgcvDevExp, msplineDevExp),
+            col.names = c( "Metric", "GAM % Deviance", "mono-GAM % Deviance"),
              digits = 3)
 ```
 
@@ -224,9 +233,11 @@ We can plot the monotonic GAMs and unconstrained GAMs for each metric here:
 ```{r monogamyplots, fig.width = 8, fig.height = 5.5}
 
 par(mfrow = c(1,2))
-for (i in 1:8) {
-    plot(metricmodels$msplinemodel[[i]], xlab = metricmodels$label[i],
-         ylab = "MOS", pch = 16, xlim = c(0,1), ylim = c(0,100))
+for (i in 1:nrow(metricmodels)) {
+    plot(metricmodels$msplinemodel[[i]],
+         xlab = metricmodels$metric[i], #metricmodels$label[i],
+         ylab = "MOS",
+         pch = 16, xlim = c(0,1), ylim = c(0,100))
     mgcvx <- metricmodels$mgcvmodel[[i]]$model$x
     mgcvy <- metricmodels$mgcvmodel[[i]]$fitted.values
     rearr <- order(mgcvx)
@@ -248,8 +259,9 @@ We can also investigate if we modeled it the other direction.
 ```{r revplost, echo = FALSE, fig.width = 8, fig.height = 5.5}
 
 par(mfrow = c(1,2))
-for (i in 1:8) {
-    plot(revmetricmodels$msplinemodel[[i]], ylab = revmetricmodels$label[i],
+for (i in 1:nrow(metricmodels)) {
+    plot(revmetricmodels$msplinemodel[[i]],
+         ylab = revmetricmodels$metric[i],#revmetricmodels$label[i],
          xlab = "MOS", pch = 16, xlim = c(0,100), ylim = c(0,1))
     mgcvx <- revmetricmodels$mgcvmodel[[i]]$model$x
     mgcvy <- revmetricmodels$mgcvmodel[[i]]$fitted.values
@@ -269,8 +281,8 @@ to check out, as expected.
 
 ```{r unrestrictedGAMplot, fig.width = 6, fig.height = 6}
 
-for (i in 1:8) {
-    cat( metricmodels$label[i])
+for (i in 1:nrow(metricmodels)) {
+    cat( metricmodels$metric[i]) #metricmodels$label[i])
     mgcv::gam.check(metricmodels$mgcvmodel[[i]])
     cat("\n\n\n\n\n")
 }
