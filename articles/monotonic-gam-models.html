@@ -89,32 +89,63 @@
 
     
     
-<pre><code>#&gt; Loading required package: monogamy
-#&gt; 
-#&gt; Attaching package: 'dplyr'
-#&gt; The following objects are masked from 'package:stats':
-#&gt; 
-#&gt;     filter, lag
-#&gt; The following objects are masked from 'package:base':
-#&gt; 
-#&gt;     intersect, setdiff, setequal, union
-#&gt; Loading required package: nlme
-#&gt; 
-#&gt; Attaching package: 'nlme'
-#&gt; The following object is masked from 'package:dplyr':
-#&gt; 
-#&gt;     collapse
-#&gt; This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.</code></pre>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">monogamy</span>)
+<span class="co">#&gt; Loading required package: monogamy</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'dplyr'</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     filter, lag</span>
+<span class="co">#&gt; The following objects are masked from 'package:base':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">mgcv</span>)
+<span class="co">#&gt; Loading required package: nlme</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'nlme'</span>
+<span class="co">#&gt; The following object is masked from 'package:dplyr':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     collapse</span>
+<span class="co">#&gt; This is mgcv 1.8-31. For overview type 'help("mgcv-package")'.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">purrr</span>)</pre></body></html></div>
 <div id="basic-model-fitting" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-model-fitting" class="anchor"></a>Basic Model Fitting</h2>
 <p>This example from the <code>mgcv</code> package demonstrates fitting a monotonic GAM model with two different settings for the <code>k</code> parameter.</p>
-<p><img src="monotonic-gam-models_files/figure-html/plotfunction-1.png" width="326.4"><img src="monotonic-gam-models_files/figure-html/plotfunction-2.png" width="326.4"></p>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">20200410</span>)
+<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="fl">100</span>) * <span class="fl">4</span> - <span class="fl">1</span>
+<span class="no">x</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span>(<span class="no">x</span>)
+<span class="no">f</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(<span class="fl">4</span> * <span class="no">x</span>) / (<span class="fl">1</span> + <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span>(<span class="fl">4</span> * <span class="no">x</span>))
+<span class="no">y</span> <span class="kw">&lt;-</span> <span class="no">f</span> + <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="fl">100</span>) * <span class="fl">0.1</span>
+<span class="co">#par(mfrow = c(1, 2))</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">x</span>, <span class="no">y</span>)
+<span class="no">fv</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/mspline.html">mspline</a></span>(<span class="no">x</span>, <span class="no">y</span>, <span class="fl">5</span>)
+<span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="no">x</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fv</span>, <span class="no">x</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="st">"#7fc97f"</span>)
+<span class="no">residfv_5</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span>(<span class="no">fv</span>)
+<span class="no">fv</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/mspline.html">mspline</a></span>(<span class="no">x</span>, <span class="no">y</span>, <span class="fl">10</span>)
+ <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="no">x</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(<span class="no">fv</span>, <span class="no">x</span>), <span class="kw">col</span> <span class="kw">=</span> <span class="st">"#386cb0"</span>)
+<span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span>(<span class="st">"bottomright"</span>, <span class="kw">lty</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"k="</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">10</span>)),
+       <span class="kw">col</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#7fc97f"</span>, <span class="st">"#386cb0"</span>))</pre></body></html></div>
+<p><img src="monotonic-gam-models_files/figure-html/plotfunction-1.png" width="326.4"></p>
+<div class="sourceCode" id="cb3"><html><body><pre class="r">
+<span class="no">residfv_10</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span>(<span class="no">fv</span>)
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">x</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">residfv_5</span>, <span class="kw">main</span> <span class="kw">=</span> <span class="st">"Residuals vs x plot"</span>,
+     <span class="kw">col</span> <span class="kw">=</span> <span class="st">"#7fc97f"</span>, <span class="kw">ylab</span> <span class="kw">=</span> <span class="st">"residual"</span>)
+<span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">x</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">residfv_10</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">"#386cb0"</span>, <span class="kw">pch</span> <span class="kw">=</span> <span class="fl">16</span>)
+<span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span>(<span class="st">"bottomright"</span>, <span class="kw">pch</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">16</span>), <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"k="</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">10</span>)),
+       <span class="kw">col</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"#7fc97f"</span>, <span class="st">"#386cb0"</span>))</pre></body></html></div>
+<p><img src="monotonic-gam-models_files/figure-html/plotfunction-2.png" width="326.4"></p>
 <p>This is an artificial data set, though, and the ground truth is that the curve is monotonic. Here we present some real data where the relationships between the variables are expected to be monotonic but may not be.</p>
 </div>
 <div id="application-to-image-comparison-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#application-to-image-comparison-data" class="anchor"></a>Application to Image Comparison Data</h2>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">imagemetrics</span>)
+<span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">imagemetrics</span>), <span class="kw">digits</span> <span class="kw">=</span> <span class="fl">3</span>)</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">base_img</th>
@@ -193,10 +224,44 @@
 <p><img src="image-1.png" title="Baseline Image #1" alt="Baseline Image #1"><img src="image-1-8.png" title="Distorted Image #1-8" alt="Distorted Image #1-8"></p>
 <p>Here are two example images the respondents would have been shown: the baseline image on the left and the distorted image on the right. This image had a MOS rating of 52.</p>
 <p>We expect there to be a correspondence between the image quality metrics and the MOS and that it should be monotonic, though it may be curved and may have a lot of noise in it. The quality of the images is very low compared to what might be typical for full color or grayscale images.</p>
-<pre><code>#&gt; `geom_smooth()` using formula 'y ~ s(x, bs = "cs")'
-#&gt; `geom_smooth()` using formula 'y ~ x'</code></pre>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">metric_names</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
+  <span class="kw">`catsim`</span> <span class="kw">=</span> <span class="st">"CatSIM (Cohen)"</span>,
+  <span class="kw">`msssim`</span> <span class="kw">=</span> <span class="st">"MS-SSIM"</span>,
+  <span class="kw">`AdjRand`</span> <span class="kw">=</span> <span class="st">"Adjusted Rand"</span>,
+  <span class="kw">`catsimrand`</span> <span class="kw">=</span> <span class="st">"CatSIM (AdjRand)"</span>,
+  <span class="kw">`catsimacc`</span> <span class="kw">=</span> <span class="st">"CatSIM (Accuracy)"</span>,
+  <span class="kw">`Accuracy`</span> <span class="kw">=</span> <span class="st">"Accuracy"</span>,
+  <span class="kw">`cwssim`</span> <span class="kw">=</span> <span class="st">"CW-SSIM"</span>,
+  <span class="kw">`Cohen`</span> <span class="kw">=</span> <span class="st">"Cohen's kappa"</span>,
+  <span class="kw">`catsimjacc`</span> <span class="kw">=</span> <span class="st">"CatSIM (Jaccard)"</span>,
+  <span class="kw">`Jaccard`</span> <span class="kw">=</span> <span class="st">"Jaccard"</span>
+)
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/qplot.html">qplot</a></span>(
+  <span class="kw">x</span> <span class="kw">=</span> <span class="no">score</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">MOS</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="st">"#b2df8a"</span>), <span class="kw">alpha</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="fl">0.8</span>), <span class="kw">size</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="fl">0.75</span>),
+  <span class="kw">data</span> <span class="kw">=</span> <span class="no">imagemetrics</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span>(
+    <span class="kw">method</span> <span class="kw">=</span> <span class="st">"gam"</span>, <span class="kw">se</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"#1f78b4"</span>,
+    <span class="kw">method.args</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">"GCV.Cp"</span>)
+    ) +
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span>(<span class="kw">method</span><span class="kw">=</span><span class="st">"lm"</span>, <span class="kw">se</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="st">"#fb9a99"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span>(<span class="st">"MOS"</span>) + <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span>(<span class="kw">NULL</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">metric</span>, <span class="kw">labeller</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html">as_labeller</a></span>(<span class="no">metric_names</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(
+    <span class="kw">strip.background</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span>(<span class="kw">fill</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/reexports.html">alpha</a></span>(<span class="st">"#a6cee3"</span>, <span class="fl">0.3</span>)),
+    <span class="kw">axis.text.x</span> <span class="kw">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="kw">angle</span> <span class="kw">=</span> <span class="fl">45</span>, <span class="kw">hjust</span> <span class="kw">=</span> <span class="fl">1</span>)
+  ) +
+    <span class="kw">NULL</span>
+<span class="co">#&gt; `geom_smooth()` using formula 'y ~ s(x, bs = "cs")'</span>
+<span class="co">#&gt; `geom_smooth()` using formula 'y ~ x'</span></pre></body></html></div>
 <p><img src="monotonic-gam-models_files/figure-html/plotmetrics-1.png" width="576"></p>
 <p>There is a GAM model on the plot and it’s fitted by generalized cross validation, but it has a problem: the fit really ought to be monotonic, though it’s interesting if it isn’t. We should have some sense of how well a monotonic fit works for this data and then can judge which metric best explains the variation in MOS. We can get a sense of how well each method relates to the MOS rating by looking at their correlations:</p>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">groupcorr</span> <span class="kw">&lt;-</span> <span class="no">imagemetrics</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">metric</span>) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="kw">Spearman</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="no">MOS</span>,<span class="no">score</span>, <span class="kw">method</span><span class="kw">=</span><span class="st">"spearman"</span>, <span class="kw">use</span> <span class="kw">=</span> <span class="st">"complete.obs"</span>),
+              <span class="kw">Kendall</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="no">MOS</span>, <span class="no">score</span>, <span class="kw">method</span><span class="kw">=</span><span class="st">"kendall"</span>, <span class="kw">use</span> <span class="kw">=</span> <span class="st">"complete.obs"</span>),
+              <span class="kw">Pearson</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span>(<span class="no">MOS</span>, <span class="no">score</span>, <span class="kw">method</span><span class="kw">=</span><span class="st">"pearson"</span>, <span class="kw">use</span> <span class="kw">=</span> <span class="st">"complete.obs"</span>)) <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">Spearman</span>)
+
+<span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">groupcorr</span>,<span class="kw">digits</span><span class="kw">=</span><span class="fl">3</span>)</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">metric</th>
@@ -268,6 +333,47 @@
 </tbody>
 </table>
 <p>A non-parametric correlation such as Spearman’s, since we want a monotonic relationship, says more about the correspondence of the metrics to the MOS in the way that we are interested in. However, we are probably interested in a flexible model explaining their relationship, so here we fit a monotonic GAM with <code>k = 20</code> and compare the deviance explained by the model to an unconstrained GAM with the same parameters.</p>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">fit_mspline</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">df</span>, <span class="no">k</span> <span class="kw">=</span> <span class="fl">20</span>, <span class="no">lower</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="no">upper</span> <span class="kw">=</span> <span class="fl">NA</span>) {
+    <span class="fu"><a href="../reference/mspline.html">mspline</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">df</span><span class="kw">[[</span><span class="st">"score"</span>]], <span class="kw">y</span> <span class="kw">=</span> <span class="no">df</span><span class="kw">[[</span><span class="st">"MOS"</span>]],
+            <span class="kw">k</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">lower</span> <span class="kw">=</span> <span class="no">lower</span>, <span class="kw">upper</span> <span class="kw">=</span> <span class="no">upper</span>)
+}
+
+<span class="no">fit_mgcv</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">df</span>, <span class="no">k</span> <span class="kw">=</span> <span class="fl">20</span>, <span class="no">...</span>) {
+     <span class="no">x</span> <span class="kw">&lt;-</span> <span class="no">df</span><span class="kw">[[</span><span class="st">"score"</span>]]
+     <span class="no">y</span> <span class="kw">&lt;-</span> <span class="no">df</span><span class="kw">[[</span><span class="st">"MOS"</span>]]
+     <span class="no">pass_df</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">x</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">y</span>)
+    <span class="kw pkg">mgcv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span>(<span class="no">y</span> ~ <span class="fl">1</span>+ <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span>(<span class="no">x</span>, <span class="kw">k</span> <span class="kw">=</span> <span class="no">k</span>, <span class="kw">bs</span> <span class="kw">=</span> <span class="st">"cr"</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">pass_df</span>,<span class="no">...</span>)
+}
+
+<span class="no">metricnames</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CatSIM (Cohen)"</span>,
+                 <span class="st">"CatSIM (AdjRand)"</span>,
+                 <span class="st">"CatSIM (Accuracy)"</span>,
+                 <span class="st">"Accuracy"</span>,
+                 <span class="st">"Adjusted Rand"</span>,
+                 <span class="st">"Cohen's kappa"</span>,
+                 <span class="st">"MS-SSIM"</span>,
+                 <span class="st">"CW-SSIM"</span>,
+                 <span class="st">"CatSIM (Jaccard)"</span>,
+                 <span class="st">"Jaccard"</span>
+)
+
+<span class="no">imagemetrics</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">metric</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">nest</a></span>() <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">msplinemodel</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">data</span>, <span class="no">fit_mspline</span>),
+           <span class="kw">totalvar</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span>(<span class="no">data</span>, ~ <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span>(<span class="no">.x</span>$<span class="no">MOS</span>)),
+           <span class="kw">residuals</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">msplinemodel</span>, <span class="no">residuals</span>),
+           <span class="kw">varMOS</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span>(<span class="no">data</span>, ~ <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span>(<span class="no">.x</span>$<span class="no">MOS</span>)),
+           <span class="kw">msplineVAR</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span>(<span class="no">residuals</span>, <span class="no">var</span>),
+           <span class="kw">msplineDevExp</span> <span class="kw">=</span> <span class="fl">1</span> - <span class="no">msplineVAR</span>/<span class="no">totalvar</span>,
+           <span class="kw">mgcvmodel</span> <span class="kw">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="no">data</span>, <span class="fu"><a href="https://purrr.tidyverse.org/reference/safely.html">possibly</a></span>(<span class="no">fit_mgcv</span>, <span class="kw">otherwise</span> <span class="kw">=</span> <span class="fl">NA</span>)),
+           <span class="kw">mgcvDevExp</span> <span class="kw">=</span> <span class="fl">1</span> - <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span>(<span class="no">mgcvmodel</span>, ~<span class="no">.x</span>$<span class="no">deviance</span>/<span class="no">.x</span>$<span class="no">null.deviance</span>)) <span class="kw">-&gt;</span>
+    <span class="no">metricmodels</span>
+<span class="no">metricmodels</span>$<span class="no">label</span> <span class="kw">&lt;-</span> <span class="no">metricnames</span>
+<span class="co">## metricmodels$label &lt;- metricmodels$metric</span>
+<span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">metricmodels</span> <span class="kw">%&gt;%</span>
+                 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>() <span class="kw">%&gt;%</span>
+                 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">label</span>, <span class="no">mgcvDevExp</span>, <span class="no">msplineDevExp</span>),
+            <span class="kw">col.names</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>( <span class="st">"Metric"</span>, <span class="st">"GAM % Deviance"</span>, <span class="st">"mono-GAM % Deviance"</span>),
+             <span class="kw">digits</span> <span class="kw">=</span> <span class="fl">3</span>)</pre></body></html></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Metric</th>
@@ -393,6 +499,20 @@
 <h2 class="hasAnchor">
 <a href="#plotting-the-monotonic-gam" class="anchor"></a>Plotting the monotonic GAM</h2>
 <p>We can plot the monotonic GAMs and unconstrained GAMs for each metric here:</p>
+<div class="sourceCode" id="cb8"><html><body><pre class="r">
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="kw">mfrow</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">2</span>))
+<span class="kw">for</span> (<span class="no">i</span> <span class="kw">in</span> <span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">metricmodels</span>)) {
+    <span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">metricmodels</span>$<span class="no">msplinemodel</span><span class="kw">[[</span><span class="no">i</span>]],
+         <span class="kw">xlab</span> <span class="kw">=</span> <span class="no">metricmodels</span>$<span class="no">metric</span>[<span class="no">i</span>], <span class="co">#metricmodels$label[i],</span>
+         <span class="kw">ylab</span> <span class="kw">=</span> <span class="st">"MOS"</span>,
+         <span class="kw">pch</span> <span class="kw">=</span> <span class="fl">16</span>, <span class="kw">xlim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="kw">ylim</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">100</span>))
+    <span class="no">mgcvx</span> <span class="kw">&lt;-</span> <span class="no">metricmodels</span>$<span class="no">mgcvmodel</span><span class="kw">[[</span><span class="no">i</span>]]$<span class="no">model</span>$<span class="no">x</span>
+    <span class="no">mgcvy</span> <span class="kw">&lt;-</span> <span class="no">metricmodels</span>$<span class="no">mgcvmodel</span><span class="kw">[[</span><span class="no">i</span>]]$<span class="no">fitted.values</span>
+    <span class="no">rearr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span>(<span class="no">mgcvx</span>)
+    <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span>(<span class="no">mgcvx</span>[<span class="no">rearr</span>], <span class="no">mgcvy</span>[<span class="no">rearr</span>], <span class="kw">col</span> <span class="kw">=</span> <span class="st">"blue"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span>(<span class="st">"bottomright"</span>, <span class="kw">lty</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Mono"</span>, <span class="st">"Uncons"</span>),
+           <span class="kw">col</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"red"</span>, <span class="st">"blue"</span>))
+}</pre></body></html></div>
 <p><img src="monotonic-gam-models_files/figure-html/monogamyplots-1.png" width="768"><img src="monotonic-gam-models_files/figure-html/monogamyplots-2.png" width="768"><img src="monotonic-gam-models_files/figure-html/monogamyplots-3.png" width="768"><img src="monotonic-gam-models_files/figure-html/monogamyplots-4.png" width="768"><img src="monotonic-gam-models_files/figure-html/monogamyplots-5.png" width="768"></p>
 <p>For several of these, there is no difference between the constrained and unconstrained models since they were already monotonic.</p>
 <div id="plots-with-mos-as-the-x-axis" class="section level3">
@@ -406,7 +526,13 @@
 <h2 class="hasAnchor">
 <a href="#unconstrained-gam-diagnostics" class="anchor"></a>Unconstrained GAM diagnostics</h2>
 <p>These diagnostics can be inspected for completeness, but they all seem to check out, as expected.</p>
-<pre><code>#&gt; catsim</code></pre>
+<div class="sourceCode" id="cb9"><html><body><pre class="r">
+<span class="kw">for</span> (<span class="no">i</span> <span class="kw">in</span> <span class="fl">1</span>:<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">metricmodels</span>)) {
+    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>( <span class="no">metricmodels</span>$<span class="no">metric</span>[<span class="no">i</span>]) <span class="co">#metricmodels$label[i])</span>
+    <span class="kw pkg">mgcv</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.check.html">gam.check</a></span>(<span class="no">metricmodels</span>$<span class="no">mgcvmodel</span><span class="kw">[[</span><span class="no">i</span>]])
+    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"\n\n\n\n\n"</span>)
+}
+<span class="co">#&gt; catsim</span></pre></body></html></div>
 <p><img src="monotonic-gam-models_files/figure-html/unrestrictedGAMplot-1.png" width="576"></p>
 <pre><code>#&gt; 
 #&gt; Method: GCV   Optimizer: magic
